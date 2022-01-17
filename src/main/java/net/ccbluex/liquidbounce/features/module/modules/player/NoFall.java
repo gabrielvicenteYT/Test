@@ -37,7 +37,7 @@ import net.minecraft.util.*;
 
 @ModuleInfo(name = "NoFall", spacedName = "No Fall", description = "Prevents you from taking fall damage.", category = ModuleCategory.PLAYER)
 public class NoFall extends Module {
-    public final ListValue modeValue = new ListValue("Mode", new String[]{"SpoofGround", "NoGround", "Packet", "NewPacket", "MLG" , "AAC", "LAAC", "AAC3.3.11", "AAC3.3.15", "Spartan", "CubeCraft" , "Hypixel", "NewHypixel", "Damage", "Edit", "Verus"}, "SpoofGround");
+    public final ListValue modeValue = new ListValue("Mode", new String[]{"SpoofGround", "NoGround", "Packet", "NewPacket", "MLG" , "AAC", "LAAC", "AAC3.3.11", "AAC3.3.15", "Spartan", "CubeCraft" , "Hypixel", "NewHypixel", "Damage", "Edit", "Verus", "VerusSilent"}, "SpoofGround");
     private final FloatValue minFallDistance = new FloatValue("MinMLGHeight", 5F, 2F, 50F);
     private final BoolValue voidCheck = new BoolValue("Void-Check", true);
 
@@ -147,6 +147,12 @@ public class NoFall extends Module {
                     mc.thePlayer.motionZ *= 0.25;
                     shouldSpoof = true;
                 }
+                break;
+            case "verussilent": {
+                if(mc.thePlayer.fallDistance - mc.thePlayer.motionY > 3) {
+                    mc.thePlayer.fallDistance = 0.0f;
+                    shouldSpoof = true;
+                }
             }
         }
     }
@@ -187,6 +193,10 @@ public class NoFall extends Module {
                 playerPacket.onGround = true;
 
             if (mode.equalsIgnoreCase("Verus") && mc.thePlayer != null && shouldSpoof) {
+                playerPacket.onGround = true;
+                shouldSpoof = false;
+
+            if (mode.equalsIgnoreCase("VerusSilent") && mc.thePlayer != null && shouldSpoof) {
                 playerPacket.onGround = true;
                 shouldSpoof = false;
             }
